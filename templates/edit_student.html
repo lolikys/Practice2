@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать студента{% endblock %}
+
+{% block content %}
+<h2>Редактирование студента: {{ student.name }}</h2>
+
+<form method="POST">
+    <div class="form-group">
+        <label for="name">Полное имя:</label>
+        <input type="text" id="name" name="name" class="form-control" 
+               value="{{ student.name }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="username">Логин:</label>
+        <input type="text" id="username" name="username" class="form-control" 
+               value="{{ student.username }}" required>
+        <small class="form-text text-muted">Уникальный логин для входа в систему</small>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+    <a href="{{ url_for('students_list') }}" class="btn btn-secondary">Отмена</a>
+</form>
+
+<div class="mt-3">
+    <p><strong>Дополнительные действия:</strong></p>
+    <ul>
+        <li><a href="{{ url_for('set_admin_student_password', student_id=student.id) }}">
+            Изменить/установить пароль
+        </a></li>
+        <li><a href="{{ url_for('student_courses_admin', student_id=student.id) }}">
+            Просмотреть курсы студента
+        </a></li>
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Панель студента{% endblock %}
+
+{% block content %}
+<h2>Добро пожаловать, {{ current_user.name }}!</h2>
+
+<h3>Меню:</h3>
+<ul>
+    <li><a href="{{ url_for('student_profile') }}"> Мой профиль</a></li>
+    <li><a href="{{ url_for('student_courses') }}"> Мои курсы ({{ current_user.courses|length }})</a></li>
+    <li><a href="{{ url_for('set_student_password') }}"> Сменить пароль</a></li>
+    <li><a href="{{ url_for('logout') }}"> Выйти</a></li>
+</ul>
+
+<h3>Ваши курсы:</h3>
+{% if current_user.courses %}
+    <ul>
+        {% for course in current_user.courses %}
+            <li>
+                <strong>{{ course.title }}</strong> - {{ course.duration }}
+                {% if course.description %}
+                    <br><small>{{ course.description }}</small>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Вы не записаны ни на один курс</p>
+    <p><small>Обратитесь к администратору для записи на курсы</small></p>
+{% endif %}
+{% endblock %}

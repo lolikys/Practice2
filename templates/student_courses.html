@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Мои курсы{% endblock %}
+
+{% block content %}
+<h2>Мои курсы</h2>
+
+{% if current_user.courses %}
+    <p>Всего курсов: {{ current_user.courses|length }}</p>
+
+    {% for course in current_user.courses %}
+    <div>
+        <h3>{{ course.title }}</h3>
+        <ul>
+            <li><strong>Длительность:</strong> {{ course.duration }}</li>
+            {% if course.description %}
+                <li><strong>Описание:</strong> {{ course.description }}</li>
+            {% endif %}
+        </ul>
+    </div>
+    <hr>
+    {% endfor %}
+{% else %}
+    <p>Вы не записаны ни на один курс</p>
+    <p>Обратитесь к администратору для записи на курсы</p>
+{% endif %}
+
+<p><a href="{{ url_for('student_dashboard') }}">Вернуться в панель</a></p>
+{% endblock %}
