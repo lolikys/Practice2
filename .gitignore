@@ -1,1 +1,7 @@
-__pycache__/, *.pyc, .env, venv/, .idea/, *.log, *.sqlite3
+__pycache__/, *.pyc, .env, venv/, .idea/, *.log, *.sqlite3, .vscode/, .DS_Store, Thumbs.db
+client/mobile/academi_mobile/.dart_tool/
+client/mobile/academi_mobile/build/
+client/mobile/academi_mobile/.flutter-plugins
+client/mobile/academi_mobile/.flutter-plugins-dependencies
+client/tv/academi_tv/.dart_tool/
+client/tv/academi_tv/build/

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Academi Web</title>
+    <style>
+        body { font-family: Arial; max-width: 400px; margin: 50px auto; padding: 20px; }
+        input { width: 100%; padding: 10px; margin: 5px 0; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #3498db; color: white; border: none; cursor: pointer; }
+        #app { display: none; }
+        .course { border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div id="login-box">
+        <h2>Вход в Academi</h2>
+        <input type="text" id="username" placeholder="Логин (например, admin)">
+        <input type="password" id="password" placeholder="Пароль (например, admin123)">
+        <button onclick="login()">Войти</button>
+        <p id="error" style="color:red;"></p>
+    </div>
+
+    <div id="app">
+        <h2>Мои курсы</h2>
+        <button onclick="logout()">Выйти</button>
+        <div id="courses"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000/api';
+
+        async function login() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const err = document.getElementById('error');
+            err.innerText = '';
+
+            try {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username: u, password: p})
+                });
+                
+                if (!res.ok) throw new Error('Неверный логин или пароль');
+                
+                const data = await res.json();
+                localStorage.setItem('token', data.access_token);
+                localStorage.setItem('name', data.name);
+                
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                loadCourses();
+            } catch (e) {
+                err.innerText = e.message;
+            }
+        }
+
+        async function loadCourses() {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API_URL}/my-courses`, {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+            const courses = await res.json();
+            
+            document.getElementById('courses').innerHTML = courses.map(c => `
+                <div class="course">
+                    <h3>${c.title}</h3>
+                    <p>${c.duration} | ${c.description || ''}</p>
+                </div>
+            `).join('');
+        }
+
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Профиль студента - {{ student.name|e }}
+{% endblock %}
+
+{% block content %}
+    <h1>Профиль студента</h1>
+
+    <h2>Основная информация</h2>
+    <ul>
+        <li><strong>Имя:</strong> {{ student.name|e }}</li>
+        <li><strong>Пароль установлен:</strong>
+            {% if student.password_hash %}Да{% else %}Нет{% endif %}
+        </li>
+    </ul>
+
+    <h2>Записанные курсы</h2>
+    {% if student.courses %}
+        <ul>
+            {% for course in student.courses %}
+                <li>{{ course.title|e }} ({{ course.duration }})</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Студент не записан ни на один курс</p>
+    {% endif %}
+
+    <div>
+        <a href="{{ url_for('set_admin_student_password', student_id=student.id) }}">Установить пароль</a>
+        <a href="{{ url_for('students_list') }}">Назад к списку</a>
+    </div>
+{% endblock %}

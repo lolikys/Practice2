@@ -13,12 +13,12 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+# Промежуточная таблица для связи студентов и курсов
 student_course = db.Table('student_course',
     db.Column('student_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('course_id', db.Integer, db.ForeignKey('course.id'), primary_key=True)
 )
 
-# Единая модель пользователя
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -95,12 +95,7 @@ def add_course_admin():
         duration = request.form.get('duration')
         description = request.form.get('description')
 
-        new_course = Course(
-            title=title,
-            duration=duration,
-            description=description
-        )
-
+        new_course = Course(title=title, duration=duration, description=description)
         db.session.add(new_course)
         db.session.commit()
 
@@ -166,9 +161,7 @@ def enroll_student_to_course(course_id):
     all_students = db.session.query(User).filter_by(role='student').all()
     available_students = [s for s in all_students if s not in course.students]
 
-    return render_template('enroll_student.html',
-                           course=course,
-                           students=available_students)
+    return render_template('enroll_student.html', course=course, students=available_students)
 
 @app.route('/student/courses')
 @login_required
@@ -201,13 +194,7 @@ def add_student_admin():
             flash('Пользователь с таким логином уже существует', 'error')
             return redirect(url_for('add_student_admin'))
 
-        student = User(
-            username=username,
-            name=name,
-            role='student',
-            password_hash=''
-        )
-
+        student = User(username=username, name=name, role='student', password_hash='')
         db.session.add(student)
         db.session.commit()
 
@@ -230,7 +217,6 @@ def edit_student_admin(student_id):
     if request.method == 'POST':
         student.name = request.form.get('name')
         student.username = request.form.get('username')
-
         db.session.commit()
         flash('Данные студента обновлены', 'success')
         return redirect(url_for('students_list'))
@@ -285,7 +271,6 @@ def course_students(course_id):
     if not course:
         flash('Курс не найден', 'error')
         return redirect(url_for('admin_courses'))
-
     return render_template('course_students.html', course=course)
 
 @app.route('/admin/students/<int:student_id>/courses')
@@ -295,7 +280,6 @@ def student_courses_admin(student_id):
     if not student:
         flash('Студент не найден', 'error')
         return redirect(url_for('students_list'))
-
     return render_template('student_courses_admin.html', student=student)
 
 @app.route('/student/set-password', methods=['GET', 'POST'])
@@ -354,11 +338,7 @@ def student_profile():
 def create_admin():
     db.create_all()
     if not User.query.filter_by(username='admin').first():
-        admin = User(
-            username='admin',
-            role='admin',
-            name='Администратор системы'
-        )
+        admin = User(username='admin', role='admin', name='Администратор системы')
         admin.set_password('admin123')
         db.session.add(admin)
         db.session.commit()

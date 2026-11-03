@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Зачисление на курс{% endblock %}
+
+{% block content %}
+<h2>Зачисление на курс {{ course.title }}</h2>
+
+<form method="POST">
+    <div class="form-group">
+        <label>Выберите студента:</label>
+        <select name="student_id" class="form-control" required>
+            <option value="">Выберите студента</option>
+            {% for student in students %}
+                <option value="{{ student.id }}">{{ student.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Зачислить</button>
+</form>
+
+<a href="{{ url_for('admin_courses') }}">Назад к списку курсов</a>
+{% endblock %}

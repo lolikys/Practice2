@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Мой профиль{% endblock %}
+
+{% block content %}
+<h2>Мой профиль</h2>
+
+<h3>Личные данные:</h3>
+<ul>
+    <li><strong>Имя:</strong> {{ current_user.name }}</li>
+    <li><strong>Логин:</strong> {{ current_user.username }}</li>
+    <li><strong>Роль:</strong> {{ current_user.role }}</li>
+</ul>
+
+<h3>Действия:</h3>
+<ul>
+    <li><a href="{{ url_for('set_student_password') }}">Сменить пароль</a></li>
+    <li><a href="{{ url_for('student_courses') }}">Мои курсы</a></li>
+    <li><a href="{{ url_for('student_dashboard') }}">Вернуться в панель</a></li>
+    <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+</ul>
+{% endblock %}
